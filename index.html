@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vrienden Planner</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  </head>
+  <body>
+    <h1>Vrienden Planner Test</h1>
+
+    <input id="naam" placeholder="Jouw naam" />
+    <input id="periode" placeholder="Bijv: 20 okt - 30 jan" />
+    <select id="status">
+      <option value="kan">✅ Kan</option>
+      <option value="misschien">❓ Misschien</option>
+      <option value="niet">❌ Kan niet</option>
+    </select>
+    <button onclick="opslaan()">Opslaan</button>
+
+    <ul id="lijst"></ul>
+
+    <script>
+      // --- Firebase config ---
+      const firebaseConfig = {
+        apiKey: "JOUW_API_KEY",
+        authDomain: "JOUW_PROJECT.firebaseapp.com",
+        projectId: "JOUW_PROJECT_ID",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // --- Functie opslaan ---
+      function opslaan() {
+        const naam = document.getElementById("naam").value;
+        const periode = document.getElementById("periode").value;
+        const status = document.getElementById("status").value;
+
+        db.collection("beschikbaarheid")
+          .add({ naam, periode, status })
+          .then(() => {
+            alert("Opgeslagen!");
+            document.getElementById("naam").value = "";
+            document.getElementById("periode").value = "";
+          });
+      }
+
+      // --- Functie ophalen ---
+      db.collection("beschikbaarheid").onSnapshot((snapshot) => {
+        const lijst = document.getElementById("lijst");
+        lijst.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          lijst.innerHTML += `<li>${data.naam}: ${data.periode} → ${data.status}</li>`;
+        });
+      });
+    </script>
+  </body>
+</html>
