@@ -1,59 +1,61 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Vrienden Planner</title>
+    <title>Project Vacation</title>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  </head>
-  <body>
-    <h1>Vrienden Planner Test</h1>
-
-    <input id="naam" placeholder="Jouw naam" />
-    <input id="periode" placeholder="Bijv: 20 okt - 30 jan" />
-    <select id="status">
-      <option value="kan">✅ Kan</option>
-      <option value="misschien">❓ Misschien</option>
-      <option value="niet">❌ Kan niet</option>
-    </select>
-    <button onclick="opslaan()">Opslaan</button>
-
-    <ul id="lijst"></ul>
-
     <script>
-      // --- Firebase config ---
       const firebaseConfig = {
-        apiKey: "JOUW_API_KEY",
-        authDomain: "JOUW_PROJECT.firebaseapp.com",
-        projectId: "JOUW_PROJECT_ID",
+        apiKey: "AIzaSyAmNAHfcjAGdprRngmuG1Cru5AsvXLfSGk",
+        authDomain: "project-vacation-e8d22.firebaseapp.com",
+        projectId: "project-vacation-e8d22",
       };
+
       firebase.initializeApp(firebaseConfig);
       const db = firebase.firestore();
+    </script>
+  </head>
+  <body>
+    <h1>Project Vacation Test</h1>
 
-      // --- Functie opslaan ---
-      function opslaan() {
-        const naam = document.getElementById("naam").value;
-        const periode = document.getElementById("periode").value;
+    <input id="name" placeholder="Your name" />
+    <input id="period" placeholder="E.g., Oct 20 - Jan 30" />
+    <select id="status">
+      <option value="yes">✅ Yes</option>
+      <option value="maybe">❓ Maybe</option>
+      <option value="no">❌ No</option>
+    </select>
+    <button onclick="save()">Save</button>
+
+    <ul id="list"></ul>
+
+    <script>
+      // --- Save function ---
+      function save() {
+        const name = document.getElementById("name").value;
+        const period = document.getElementById("period").value;
         const status = document.getElementById("status").value;
 
-        db.collection("beschikbaarheid")
-          .add({ naam, periode, status })
+        db.collection("availability")
+          .add({ name, period, status })
           .then(() => {
-            alert("Opgeslagen!");
-            document.getElementById("naam").value = "";
-            document.getElementById("periode").value = "";
+            alert("Saved!");
+            document.getElementById("name").value = "";
+            document.getElementById("period").value = "";
           });
       }
 
-      // --- Functie ophalen ---
-      db.collection("beschikbaarheid").onSnapshot((snapshot) => {
-        const lijst = document.getElementById("lijst");
-        lijst.innerHTML = "";
+      // --- Fetch and display ---
+      db.collection("availability").onSnapshot((snapshot) => {
+        const list = document.getElementById("list");
+        list.innerHTML = "";
         snapshot.forEach((doc) => {
           const data = doc.data();
-          lijst.innerHTML += `<li>${data.naam}: ${data.periode} → ${data.status}</li>`;
+          list.innerHTML += `<li>${data.name}: ${data.period} → ${data.status}</li>`;
         });
       });
     </script>
   </body>
 </html>
+x
